@@ -1,0 +1,6 @@
+{
+  "appId": "nave.on",
+  "appName": "Navegador",
+  "webDir": "www",
+  "bundledWebRuntime": false
+}
