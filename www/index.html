@@ -383,7 +383,7 @@
         </div>
     </div>
 
-    <iframe id="browser-frame" src="about:blank"></iframe>
+    <iframe id="browser-frame" src="about:blank" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
 
     <div class="modal-overlay" id="security-modal">
         <div class="modal-content">
@@ -459,7 +459,8 @@
             bing: "https://www.bing.com/search?q="
         };
 
-        const SAFE_DOMAINS = ["g-jxlf.onrender.com", "wikipedia.org", "github.com", "google.com", "youtube.com", "developer.mozilla.org", "pitocoofc.github.io", "nexoraofc.github.io", "nexoraincofc.github.io"];
+        // Adicionados explicitamente os domínios base dos motores de busca para evitar falsos positivos de bloqueio
+        const SAFE_DOMAINS = ["g-jxlf.onrender.com", "wikipedia.org", "github.com", "google.com", "duckduckgo.com", "bing.com", "youtube.com", "developer.mozilla.org", "pitocoofc.github.io", "nexoraofc.github.io", "nexoraincofc.github.io"];
         
         let defaultShortcuts = [
             { name: "Google", url: "https://google.com", icon: "🌐" },
@@ -491,7 +492,6 @@
             type();
         }
 
-        // Restituído o comportamento clássico: Abre tudo via iframe mantendo a UI e a barra do app
         function openPage(url, title) {
             const load = () => {
                 frame.src = url;
@@ -509,12 +509,15 @@
                 }
             };
 
-            const isSafe = SAFE_DOMAINS.some(d => url.includes(d));
+            // Correção da checagem: o script antigo comparava com erro URLs complexas de busca
+            const isSafe = SAFE_DOMAINS.some(d => url.toLowerCase().includes(d));
             if (url.startsWith("http") && !isSafe) {
                 toggleModal('security-modal', true);
                 typeWrite(`ALERTA CRÍTICO: Conexão externa disparada para [${url}]. Deseja ignorar sandbox de metadados do Ghost Search?`, "modalDesc");
                 document.getElementById("btnProceed").onclick = () => { toggleModal('security-modal', false); load(); };
-            } else { load(); }
+            } else { 
+                load(); 
+            }
         }
 
         function processInput(text) {
