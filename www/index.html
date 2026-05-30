@@ -383,7 +383,7 @@
         </div>
     </div>
 
-    <iframe id="browser-frame" src="about:blank" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
+    <iframe id="browser-frame" src="about:blank"></iframe>
 
     <div class="modal-overlay" id="security-modal">
         <div class="modal-content">
@@ -459,8 +459,7 @@
             bing: "https://www.bing.com/search?q="
         };
 
-        // Adicionados explicitamente os domínios base dos motores de busca para evitar falsos positivos de bloqueio
-        const SAFE_DOMAINS = ["g-jxlf.onrender.com", "wikipedia.org", "github.com", "google.com", "duckduckgo.com", "bing.com", "youtube.com", "developer.mozilla.org", "pitocoofc.github.io", "nexoraofc.github.io", "nexoraincofc.github.io"];
+        const SAFE_DOMAINS = ["g-jxlf.onrender.com", "wikipedia.org", "github.com", "google.com", "youtube.com", "developer.mozilla.org", "pitocoofc.github.io", "nexoraofc.github.io", "nexoraincofc.github.io"];
         
         let defaultShortcuts = [
             { name: "Google", url: "https://google.com", icon: "🌐" },
@@ -509,21 +508,17 @@
                 }
             };
 
-            // Correção da checagem: o script antigo comparava com erro URLs complexas de busca
-            const isSafe = SAFE_DOMAINS.some(d => url.toLowerCase().includes(d));
+            const isSafe = SAFE_DOMAINS.some(d => url.includes(d));
             if (url.startsWith("http") && !isSafe) {
                 toggleModal('security-modal', true);
                 typeWrite(`ALERTA CRÍTICO: Conexão externa disparada para [${url}]. Deseja ignorar sandbox de metadados do Ghost Search?`, "modalDesc");
                 document.getElementById("btnProceed").onclick = () => { toggleModal('security-modal', false); load(); };
-            } else { 
-                load(); 
-            }
+            } else { load(); }
         }
 
         function processInput(text) {
             if(!text) return;
             text = text.trim();
-            
             if (text.includes('.') && !text.includes(' ')) {
                 let url = text.startsWith('http') ? text : 'https://' + text;
                 openPage(url, text);
@@ -564,6 +559,7 @@
             if(id === 'settings-modal' && show) populateSettingsFields();
         }
 
+        // UPLOAD DE IMAGEM DA GALERIA
         function handleImageUpload(inputEl) {
             const file = inputEl.files[0];
             if (file) {
@@ -621,6 +617,7 @@
             document.documentElement.style.setProperty('--primary', primaryColor);
         }
 
+        // GERENCIADOR DE ATALHOS RÁPIDOS
         function renderShortcuts() {
             const container = document.getElementById("shortcuts-display");
             container.innerHTML = "";
