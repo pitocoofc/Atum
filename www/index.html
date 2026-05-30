@@ -491,14 +491,8 @@
             type();
         }
 
+        // Restituído o comportamento clássico: Abre tudo via iframe mantendo a UI e a barra do app
         function openPage(url, title) {
-            // Se o link pertencer ao Google ou DuckDuckGo, quebra o app e força abrir no WebView nativo total do sistema
-            if (url.includes("google.com") || url.includes("duckduckgo.com")) {
-                window.location.href = url;
-                return; 
-            }
-
-            // Comportamento normal de iframe para Ghost e Bing
             const load = () => {
                 frame.src = url;
                 frame.style.display = 'block';
@@ -506,7 +500,6 @@
                 hub.style.opacity = '0';
                 setTimeout(() => { hub.style.display = 'none'; }, 400);
 
-                // Mantém a máscara ativa para o Ghost e o Bing, ou muda se for um link direto digitado de outro tipo
                 if (url.startsWith("https://") || url.startsWith("http://")) {
                     document.getElementById("urlPrefix").innerText = "";
                     document.getElementById("urlbar").value = url;
@@ -528,13 +521,6 @@
             if(!text) return;
             text = text.trim();
             
-            // Se o usuário digitou uma URL direta do google ou duckduckgo no campo de texto
-            if (text.includes('google.com') || text.includes('duckduckgo.com')) {
-                let url = text.startsWith('http') ? text : 'https://' + text;
-                window.location.href = url;
-                return;
-            }
-
             if (text.includes('.') && !text.includes(' ')) {
                 let url = text.startsWith('http') ? text : 'https://' + text;
                 openPage(url, text);
