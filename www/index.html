@@ -419,9 +419,23 @@
             <div class="config-group">
                 <label>Motor de Busca do Browser</label>
                 <select id="cfgSearchEngine">
-                    <option value="ghost">Ghost Search (Render API)</option>
-                    <option value="google">Google</option>
-                    <option value="duckduckgo">DuckDuckGo</option>
+                    <option value="ghost">SearXNG</option>
+                    <option value="brave">Brave Search</option>
+                    <option value="ddg">DuckDuckGo (HTML)</option>
+                    <option value="wikipedia">Wikipédia</option>
+                    <option value="wikitionarypt">WikiTionary(PT)</option>
+                    <option value="wikitionaryen">WikiTionary(EN)</option>
+                    <option value="wikilivroen">WikiLivro(EN)</option>
+                    <option value="wikilivropt">WikiLivro(PT)</option>
+                    <option value="wikiversityen">WikiVersity(EN)</option>
+                    <option value="wikiversitypt">WikiVersity(PT)</option>
+                    <option value="specieswikimedia">SpeciesWikimedia</option>
+                    <option value="wikidata">WikiData</option>
+                    <option value="github">GitHub Search</option>
+                    <option value="stackoverflow">StackOverflow</option>
+                    <option value="openstreetmap">OpenStreetMap</option>
+                    <option value="archiver">Archive.org</option>
+                    <option value="gutenberg">Gutenberg</option>
                     <option value="bing">Bing</option>
                 </select>
             </div>
@@ -454,16 +468,31 @@
 
         const ENGINES = {
             ghost: "https://g-jxlf.onrender.com/search?q=",
-            google: "https://www.google.com/search?q=",
-            duckduckgo: "https://duckduckgo.com/?q=",
+            brave: "https://search.brave.com/search?q=",
+            ddg: "https://html.duckduckgo.com/html/?q=",
+            wikipedia: "https://www.wikipedia.org/wiki/",
+            archiver: "https://archive.org/search?query=",
+            wikidata: "https://www.wikidata.org/w/index.php?search=",
+            wikiversitypt: "https://pt.wikiversity.org/w/index.php?title=Especial:Pesquisar&go=Go&search=",
+            wikiversityen: "https://en.wikiversity.org/w/index.php?title=Especial:Pesquisar&go=Go&search=",
+            wikilivropt: "https://pt.wikibooks.org/w/index.php?search=",
+            wikilivroen: "https://en.wikibooks.org/w/index.php?search=",
+            wikitionarypt: "https://pt.wiktionary.org/wiki/",
+            wikitionaryen: "https://en.wiktionary.org/wiki/",
+            gutenberg: "https://www.gutenberg.org/ebooks/search/?query=",
+            specieswikimedia: "https://species.wikimedia.org/wiki/",
+            github: "https://github.com/search?q=",
+            stackoverflow: "https://stackoverflow.com/search?q=",
+            openstreetmap: "https://www.openstreetmap.org/search?query=",
             bing: "https://www.bing.com/search?q="
         };
 
         const SAFE_DOMAINS = ["g-jxlf.onrender.com", "wikipedia.org", "github.com", "google.com", "youtube.com", "developer.mozilla.org", "pitocoofc.github.io", "nexoraofc.github.io", "nexoraincofc.github.io"];
         
         let defaultShortcuts = [
-            { name: "Google", url: "https://google.com", icon: "🌐" },
-            { name: "YouTube", url: "https://youtube.com", icon: "▶️" }
+            { name: "Mapa", url: "https://wikimapia.org", icon: "🌍" },
+            { name: "Wikipédia", url: "https://pt.wikipedia.org/", icon: "🗃️"},
+            { name: "bing", url: "https://www.bing.com/search?q=home", icon: "🌐" }
         ];
         let userShortcuts = [];
 
@@ -491,7 +520,20 @@
             type();
         }
 
-        function openPage(url, title) {
+        async function openPage(url, title) {
+            const { Browser } = window.Capacitor?.Plugins || {};
+            
+            // Se o Capacitor estiver rodando na Nuvem/App, intercepta e abre na aba nativa premium
+            if (window.Capacitor && Browser) {
+                await Browser.open({
+                    url: url,
+                    toolbarColor: localStorage.getItem("ghost_ndj_primary") || '#3b82f6',
+                    presentationStyle: 'fullscreen'
+                });
+                return;
+            }
+
+            // Fallback clássico para rodar localmente/PC via iframe
             const load = () => {
                 frame.src = url;
                 frame.style.display = 'block';
@@ -559,7 +601,6 @@
             if(id === 'settings-modal' && show) populateSettingsFields();
         }
 
-        // UPLOAD DE IMAGEM DA GALERIA
         function handleImageUpload(inputEl) {
             const file = inputEl.files[0];
             if (file) {
@@ -617,7 +658,6 @@
             document.documentElement.style.setProperty('--primary', primaryColor);
         }
 
-        // GERENCIADOR DE ATALHOS RÁPIDOS
         function renderShortcuts() {
             const container = document.getElementById("shortcuts-display");
             container.innerHTML = "";
@@ -658,7 +698,17 @@
             let url = urlInp.value.trim();
             if(!name || !url) return;
             if(!url.startsWith("http")) url = "https://" + url;
-            let icon = url.includes("youtube.com") ? "▶️" : (url.includes("github.com") ? "🐙" : "🌐");
+            
+            // Atribuição de ícones estendida para novos serviços
+            let icon = "🌐";
+            if (url.includes("youtube.com")) icon = "▶️";
+            else if (url.includes("github.com")) icon = "🐙";
+            else if (url.includes("wikipedia.org")) icon = "🗃️";
+            else if (url.includes("openstreetmap.org") || url.includes("maps")) icon = "🗺️";
+            else if (url.includes("archive.org")) icon = "🏛️";
+            else if (url.includes("stackoverflow.com")) icon = "🥞";
+            else if (url.includes("brave.com")) icon = "🦁";
+
             userShortcuts.push({ name, url, icon });
             nameInp.value = ""; urlInp.value = "";
             renderShortcutManager();
