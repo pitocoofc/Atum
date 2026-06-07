@@ -426,7 +426,7 @@
         <div class="dropdown" id="menuDropdown">
             <div class="dropdown-item" onclick="goBack()"><span>⬅️</span> Voltar Página</div>
             <div class="dropdown-item" onclick="goHome()"><span>🏠</span> Ir para Home</div>
-            <div class="dropdown-item" onclick="openLocalFile()"><span>📄</span> Arquivo Local (ia.html)</div>
+            <div class="dropdown-item" onclick="openLocalFile()"><span>📄</span> Licença</div>
             <div class="dropdown-item" onclick="toggleModal('crypto-modal', true)"><span>💱</span> Conversor de Moedas</div>
             <div class="dropdown-item" onclick="toggleModal('tradutor', true)"><span>🌍</span> Tradutor</div>
             <div class="dropdown-item" onclick="sharePage()"><span>📤</span> Compartilhar Link</div>
@@ -769,7 +769,7 @@
             }
         }
 
-        function openLocalFile() { window.location.href = "ia.html"; }
+        function openLocalFile() { window.location.href = "licenca.html"; }
 
         function toggleModal(id, show) { 
             document.getElementById(id).style.display = show ? 'flex' : 'none'; 
@@ -1132,7 +1132,7 @@
             const readerContent = document.getElementById("reader-content");
 
             try {
-                // Tenta acessar o DOM interno do iframe
+                
                 const iframeDoc = frame.contentDocument || frame.contentWindow.document;
                 
                 
