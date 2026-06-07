@@ -26,28 +26,39 @@ jobs:
           npm install
           npm install @capacitor/assets --save-dev
 
+      - name: Preparar Assets
+        run: |
+          mkdir -p assets
+
+          if [ -f "icon.png" ]; then
+            cp icon.png assets/icon.png
+            echo "✓ icon.png copiado para assets/"
+          else
+            echo "✗ icon.png não encontrado na raiz"
+            exit 1
+          fi
+
       - name: Preparar Android
         run: |
-          npx cap add android || true
+          if [ ! -d "android" ]; then
+            npx cap add android
+          fi
+
           npx cap sync
 
       - name: Gerar Ícones Android
         run: |
-          echo "Arquivos da raiz:"
-          ls -la
+          echo "=== Gerando assets ==="
 
-          if [ -f "icon.png" ]; then
-            echo "icon.png encontrado"
+          npx capacitor-assets generate
 
-            npx capacitor-assets generate --android
+          echo ""
+          echo "=== Arquivos gerados ==="
+          find android/app/src/main/res | grep ic_launcher || true
 
-            echo "Ícones gerados:"
-            find android/app/src/main/res -name "*ic_launcher*" || true
-
-          else
-            echo "ERRO: icon.png não encontrado"
-            exit 1
-          fi
+          echo ""
+          echo "=== Drawable ==="
+          find android/app/src/main/res | grep foreground || true
 
       - name: Configurar Permissões
         run: |
@@ -71,6 +82,11 @@ jobs:
       - name: Sincronizar Projeto
         run: |
           npx cap sync
+
+      - name: Verificar Ícones
+        run: |
+          echo "=== Conteúdo mipmap ==="
+          find android/app/src/main/res/mipmap* -type f || true
 
       - name: Build APK
         run: |
