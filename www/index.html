@@ -668,7 +668,7 @@
             bing: "https://www.bing.com/search?q="
         };
 
-        const SAFE_DOMAINS = ["g-jxlf.onrender.com", "wikipedia.org", "github.com", "google.com", "youtube.com", "developer.mozilla.org", "pitocoofc.github.io", "nexoraofc.github.io", "nexoraincofc.github.io"];
+        const SAFE_DOMAINS = ["g-jxlf.onrender.com", "wikipedia.org", "github.com", "google.com", "youtube.com", "developer.mozilla.org", "pitocoofc.github.io", "nexoraofc.github.io", "nexoraincofc.github.io", "www.bing.com","wikipedia.org"];
         
         let defaultShortcuts = [
             { name: "SearXNG", url: "https://g-jxlf.onrender.com/search?q=", icon: "🌍" },
@@ -728,7 +728,7 @@
             const isSafe = SAFE_DOMAINS.some(d => url.includes(d));
             if (url.startsWith("http") && !isSafe) {
                 toggleModal('security-modal', true);
-                typeWrite(`ALERTA CRÍTICO: Conexão externa disparada para [${url}]. Deseja ignorar sandbox de metadados do Ghost Search?`, "modalDesc");
+                typeWrite(`ALERTA CRÍTICO: Conexão externa disparada para [${url}]. Deseja ignorar sandbox de metadados do Ghost Search? Esse aviso ainda pode acontecer em outros motores de busca`, "modalDesc");
                 document.getElementById("btnProceed").onclick = () => { toggleModal('security-modal', false); load(); };
             } else { load(); }
         }
@@ -900,7 +900,7 @@
             } catch (err) {}
         }
 
-        /* --- LOGICA DA API FRANKFURTER --- */
+        
         async function fetchAvailableCurrencies() {
             const fromSelect = document.getElementById("exchange-from");
             const toSelect = document.getElementById("exchange-to");
@@ -1004,8 +1004,7 @@
             }
         }
 
-        // --- SISTEMA DE CRIPTOGRAFIA MILITAR E HISTÓRICO ---
-
+        
         function toggleHistoryContainerDisplay() {
             const mode = document.getElementById("cfgHistoryMode").value;
             document.getElementById("history-manager-container").style.display = mode === "none" ? "none" : "block";
@@ -1116,16 +1115,16 @@
                 renderHistoryManager();
             }
         }
-        // Função para recarregar o iframe atual
+
         function reloadPage() {
             if (frame.style.display === 'block') {
                 const currentSrc = frame.src;
-                frame.src = 'about:blank'; // Reseta momentaneamente para forçar o reload completo
+                frame.src = 'about:blank'; 
                 setTimeout(() => { frame.src = currentSrc; }, 50);
             }
         }
 
-        // Função para ativar o Modo de Leitura extraindo dados do iframe
+
         function activateReaderMode() {
             if (frame.style.display !== 'block' || frame.src === 'about:blank') return;
 
@@ -1136,7 +1135,7 @@
                 // Tenta acessar o DOM interno do iframe
                 const iframeDoc = frame.contentDocument || frame.contentWindow.document;
                 
-                // Pega o título e os parágrafos principais
+                
                 const title = iframeDoc.querySelector('h1')?.innerText || iframeDoc.title || "Modo Leitura";
                 const paragraphs = iframeDoc.querySelectorAll('p');
                 
@@ -1146,7 +1145,7 @@
                     textBody += `<p style="color: #666;">Não foi possível extrair parágrafos de texto desta página.</p>`;
                 } else {
                     paragraphs.forEach(p => {
-                        if(p.innerText.trim().length > 10) { // Evita linhas vazias ou muito curtas
+                        if(p.innerText.trim().length > 10) { 
                             textBody += `<p style="margin-bottom: 20px;">${p.innerText}</p>`;
                         }
                     });
@@ -1156,7 +1155,7 @@
                 readerOverlay.style.display = "flex";
 
             } catch (e) {
-                // Caso caia aqui, é devido à política de Mesma Origem (CORS) do navegador bloqueando o acesso direto
+                
                 readerContent.innerHTML = `
                     <h1>Modo de Leitura Indisponível</h1>
                     <p style="margin-top:20px;">Por motivos de segurança (CORS), o navegador bloqueou a extração direta do texto desta página externa.</p>
@@ -1166,7 +1165,7 @@
             }
         }
 
-        // Função para fechar a tela de leitura
+        
         function closeReaderMode() {
             document.getElementById("reader-mode-overlay").style.display = "none";
         }
