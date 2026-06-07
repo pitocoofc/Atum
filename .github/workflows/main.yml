@@ -29,7 +29,7 @@ jobs:
           
           # 3. GERAR ÍCONES (Procura por icon.png na raiz)
           # Se não houver icon.png, ele usa o padrão do Capacitor
-          if [ -f "icon.png" ]; then
+          if [ -f "165 Sem Título_20260607170013.png" ]; then
             npx capacitor-assets generate --android
           fi
 
