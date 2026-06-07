@@ -1,6 +1,6 @@
 {
   "appId": "navegador.on",
-  "appName": "Navegador",
+  "appName": "Ghost Search",
   "webDir": "www",
   "bundledWebRuntime": false
 }
